@@ -1,0 +1,61 @@
+# Run from this directory: docker compose up -d --build
+# (build context is this package; the image fetches the fish-speech engine itself)
+#   docker compose -f ros2_ws/src/bob_s2ptts/docker-compose.yaml up -d
+# Parameter-only edits (config/container_params.yaml) need no --build: the config
+# dir is bind-mounted over the copy baked into the image.
+services:
+  tts:
+    container_name: agent-s2ptts
+    image: bob-s2ptts:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ROS_DISTRO=humble
+        - USER_UID=${USER_UID:-1000}
+        - USER_GID=${USER_GID:-1000}
+        - USERNAME=${USERNAME:-ros}
+        # LAN build mirrors come from the un-versioned .env next to this file
+        # (see .env.example). Unset/empty -> stock Ubuntu + PyPI sources, which is
+        # what GitHub Actions uses. NOTE: our debian-proxy currently mirrors Debian
+        # only (jammy -> 404), so keep the APT_* values empty until an Ubuntu
+        # (jammy) remote exists in Nexus.
+        - APT_UBUNTU_MIRROR=${APT_UBUNTU_MIRROR:-}
+        - APT_SECURITY_MIRROR=${APT_SECURITY_MIRROR:-}
+        - PIP_INDEX_URL=${PIP_INDEX_URL:-}
+        - PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST:-}
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - ROS_DOMAIN_ID=55
+      - PULSE_SERVER=unix:/run/user/1000/pulse/native
+      - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+      # TTS node parameters
+      - S2PTTS_MODEL_DIR=/models
+      - S2PTTS_PLAY=true
+    volumes:
+      # Model cache lives in this package; relative to this compose file
+      - ./models:/models
+      # Repo config shadows the copy baked into the image: parameter edits
+      # (emotion, sampling, chunking) only need `docker compose up -d`, no rebuild
+      - ./config:/app/ros2_ws/install/bob_s2ptts/share/bob_s2ptts/config:ro
+      - /run/user/1000/pulse:/run/user/1000/pulse
+    devices:
+      - /dev/snd:/dev/snd
+    group_add:
+      - audio
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    network_mode: host
+    ipc: host
+    command: >
+      ros2 run bob_s2ptts tts --ros-args
+      -r text:=/agent/llm_stream
+      -r __ns:=/eva/tts
+      --params-file /app/ros2_ws/install/bob_s2ptts/share/bob_s2ptts/config/container_params.yaml

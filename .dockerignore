@@ -1,0 +1,4 @@
+# Build context = this directory; keep it lean.
+models/
+**/__pycache__/
+*.pyc

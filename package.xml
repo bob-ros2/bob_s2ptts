@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>bob_s2ptts</name>
+  <version>0.1.0</version>
+  <description>ROS package for interfacing with Fish Audio S2-Pro TTS.</description>
+  <maintainer email="bobmeuchelm@gmail.com">Bob Ros</maintainer>
+  <license>Apache-2.0</license>
+
+  <url type="website">https://github.com/bob-ros2/bob_s2ptts</url>
+  <url type="repository">https://github.com/bob-ros2/bob_s2ptts</url>
+  <url type="bugtracker">https://github.com/bob-ros2/bob_s2ptts/issues</url>
+
+  <author email="bobmeuchelm@gmail.com">Bob Ros</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>ament_index_python</depend>
+  <depend>rcl_interfaces</depend>
+  <build_depend>rosidl_default_generators</build_depend>
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-pyqt5</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_test</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -1,0 +1,30 @@
+name: ROS 2 CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  LANG: en_US.UTF-8
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup ROS 2
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: humble
+
+      - name: Build and Test
+        uses: ros-tooling/action-ros-ci@v0.3
+        with:
+          package-name: bob_s2ptts
+          target-ros2-distro: humble
+          vcs-repo-file-url: ""
+          import-token: ${{ secrets.GITHUB_TOKEN }}

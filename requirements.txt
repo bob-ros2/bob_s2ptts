@@ -1,0 +1,19 @@
+# Fish Audio S2-Pro engine: clone upstream (pin = Dockerfile FISH_SPEECH_REF) and
+#   pip install -e fish-speech[cu128] --extra-index-url https://download.pytorch.org/whl/cu128
+# pulls torch==2.8.0, torchaudio, transformers, descript-audio-codec, ...
+
+# Checkpoint download (gated: agree to the Fish Audio Research License on HF first)
+huggingface_hub>=0.25
+
+# For reading and writing WAV files (libsndfile frontend)
+soundfile>=0.12.1
+
+# For native audio playback (provides ALSA connection for Bobs voice)
+sounddevice>=0.4.6
+
+# Resampling for the audio bridge / playback fallback
+librosa>=0.10.1
+
+# --- GUI & System ---
+# The dashboard for real-time parameter configuration
+PyQt5>=5.15.10

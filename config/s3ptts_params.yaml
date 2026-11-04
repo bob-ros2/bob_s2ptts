@@ -1,0 +1,27 @@
+/tts:
+  ros__parameters:
+    model_id: "fishaudio/s2-pro"
+    model_dir: "./models"
+    sentence_delimiters: [",", ".", ":", ";", "!", "?"]
+    flush_timeout: 700
+    temperature: 0.7
+    top_p: 0.7
+    top_k: 30
+    chunk_length: 200
+    max_new_tokens: 1024
+    seed: -1
+    normalize: true
+    precision: "bfloat16"
+    compile: false
+    warmup: true
+    control_instructions: "[excited]"
+    voice_ref_audio: "./eva_44khz_de.wav"
+    voice_ref_text: "./voice_ref_text_de.txt"
+    play: true
+    player: "sys"
+    audio_device: ""
+    file_prefix: ""
+    target_sample_rate: 0
+    file_start_index: 1
+    sentence_pause: 0.6
+    fade_ms: 8
